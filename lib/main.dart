@@ -31,13 +31,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+  TextEditingController controllerPeso = TextEditingController();
+  TextEditingController controllerAltura = TextEditingController();
+
+  String imcResultado = '00.00';
+
 
   @override
   Widget build(BuildContext context) {
@@ -61,15 +60,14 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
 
               const Text(
-                'You have pushed the button this many times:',
+                'O índice de massa corporal é uma medida internacional usada para calcular se uma pessoa está no peso ideal. Confira já o seu: ',
+                textAlign: TextAlign.justify,
               ),
 
-              Text(
-                '$_counter',
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
+              const SizedBox(height: 16),
 
               TextFormField(
+                controller: controllerPeso,
                 decoration: const InputDecoration(
                   labelText: 'Peso',
                   hintText: 'Digite seu peso:',
@@ -77,9 +75,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
 
+
               const SizedBox(height: 16),
 
+
               TextFormField(
+                controller: controllerAltura,
                 decoration: const InputDecoration(
                   labelText: 'Altura',
                   hintText: 'Digite sua altura:',
@@ -87,29 +88,55 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
 
+
               const SizedBox(height: 16),
 
-              Container(
+
+              Text(
+                'Resultado: $imcResultado',
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold
+                ),
+              ),
+
+
+              const SizedBox(height: 16),
+
+
+              SizedBox(
                 width: 200,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue.shade300,
                     foregroundColor: Colors.white 
                   ),
-                  onPressed: () {print('calculado');}, 
+                  onPressed: () {
+                    setState(() {
+                      imcResultado = (num.parse(controllerPeso.text) / ( num.parse(controllerAltura.text) * num.parse(controllerAltura.text) )).toStringAsFixed(2);
+                    });
+                  }, 
                   child: const Text('Calcular')
                 ),
-              )
+              ),
+
 
             ],
           )
         )
       ),
+
+
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        onPressed: () {
+          setState(() {
+            imcResultado = '00.00';
+          });
+        },
+        tooltip: 'Limpar resultado',
+        child: const Text('Limpar')
       ),
+
+
     );
   }
 }
